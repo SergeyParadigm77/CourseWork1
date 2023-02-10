@@ -25,6 +25,9 @@ public Employee(String name, int salary, int department) {
     public int getId() {
         return id;
     }
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public void setDepartment(int department) {
         this.department = department;
