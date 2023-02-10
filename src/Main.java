@@ -1,3 +1,5 @@
+import java.sql.SQLOutput;
+
 public class Main {
     static Employee[] employees = new Employee[10];
 
@@ -41,7 +43,17 @@ public class Main {
                 j = i;
             }
         }
-            System.out.println("Максимальная зарплата: " + employees[j].getSalary() + " у сотрудника по Ф.И.О.:" + employees[j].getName());
+            System.out.println("Максимальная зарплата: " + employees[j].getSalary() + " у сотрудника по Ф.И.О. :" + employees[j].getName());
+    }
+    private static int maxSalaryService() {
+        int j = 0;
+        for (int i = 1, maxSalary = employees[0].getSalary(); i < employees.length; i++) {
+            if (employees[i].getSalary() > maxSalary) {
+                maxSalary = employees[i].getSalary();
+                j = i;
+            }
+        }
+        return employees[j].getSalary();
     }
 
     private static void minSalary() {
@@ -53,7 +65,17 @@ public class Main {
                 j = i;
             }
         }
-        System.out.println("Минимальная зарплата: " + employees[j].getSalary() + " у сотрудника по Ф.И.О.:" + employees[j].getName());
+        System.out.println("Минимальная зарплата: " + employees[j].getSalary() + " у сотрудника по Ф.И.О.: " + employees[j].getName());
+    }
+    private static int minSalaryService() {
+        int j = 0;
+        for (int i = 1, minSalary = employees[0].getSalary(); i < employees.length; i++) {
+            if (employees[i].getSalary() < minSalary) {
+                minSalary = employees[i].getSalary();
+                j = i;
+            }
+        }
+        return employees[j].getSalary();
     }
 
     private static void averageSalary() {
@@ -71,7 +93,91 @@ public class Main {
             System.out.println(employees[i].getName());
         }
     }
-
+    private static void salaryIndexationAll(int indexationFactor) {
+        for (int i = 0, newSalary; i < employees.length; i++) {
+                newSalary = employees[i].getSalary() * (100 + indexationFactor) / 100;
+                employees[i].setSalary(newSalary);
+            }
+        printAll();
+        }
+    private static void salaryIndexationDepartment(int desiredDepartment, int indexationFactor) {
+        for (int i = 0; i < employees.length; i++) {
+            if (employees[i].getDepartment() == desiredDepartment) {
+                int newSalary = employees[i].getSalary() * (100 + indexationFactor) / 100;
+                employees[i].setSalary(newSalary);
+            }
+        }
+    }
+    private static void minDepartmentSalary(int desiredDepartment) {
+        System.out.println();
+        int j = 0, minSalary = maxSalaryService();
+        for (int i = 0; i < employees.length; i++) {
+            if (employees[i].getDepartment() == desiredDepartment && employees[i].getSalary() < minSalary) {
+                minSalary = employees[i].getSalary();
+                j = i;
+            }
+        }
+        System.out.println("В отделе номер " + desiredDepartment +  " минимальная зарплата составляет: " + employees[j].getSalary() + " у сотрудника по Ф.И.О.: " + employees[j].getName());
+    }
+    private static void maxDepartmentSalary(int desiredDepartment) {
+        System.out.println();
+        int j = 0, maxSalary = minSalaryService();
+        for (int i = 0; i < employees.length; i++) {
+            if (employees[i].getDepartment() == desiredDepartment && employees[i].getSalary() > maxSalary) {
+                maxSalary = employees[i].getSalary();
+                j = i;
+            }
+        }
+        System.out.println("В отделе номер " + desiredDepartment +  " максимальная зарплата составляет: " + employees[j].getSalary() + " у сотрудника по Ф.И.О.: " + employees[j].getName());
+    }
+    private static void monthDepartmentSalary(int desiredDepartment) {
+        System.out.println();
+        int monthDepartmentSalary = 0;
+        for (int i = 0; i < employees.length; i++) {
+            if (employees[i].getDepartment() == desiredDepartment) {
+                monthDepartmentSalary += employees[i].getSalary();
+            }
+        }
+        System.out.println("По отделу номер " + desiredDepartment + " cумма затрат на зарплаты в месяц составляет: " + monthDepartmentSalary);
+    }
+    private static void averageDepartmentSalary(int desiredDepartment) {
+        System.out.println();
+        int monthDepartmentSalary = 0, numberEmployeesDepartment = 0;
+        for (int i = 0; i < employees.length; i++) {
+            if (employees[i].getDepartment() == desiredDepartment) {
+                monthDepartmentSalary += employees[i].getSalary();
+                numberEmployeesDepartment++;
+            }
+        }
+        System.out.println("По отделу номер " + desiredDepartment + " cреднее значение зарплат составляет: " + monthDepartmentSalary / numberEmployeesDepartment);
+    }
+    private static void printAllWithoutDepartment(int desiredDepartment) {
+        System.out.println();
+        System.out.println("Список всех сотрудников отдела номер " + desiredDepartment + " со всеми имеющимися данными (кроме номера отдела): ");
+        for (int i = 0; i < employees.length; i++) {
+            if (employees[i].getDepartment() == desiredDepartment) {
+                System.out.println("Id сотрудника: " + employees[i].getId() + " Имя сотрудника: " + employees[i].getName() + " Зарплата сотрудника: " + employees[i].getSalary());
+            }
+        }
+    }
+    private static void printNameSalaryLess(int salaryLess) {
+        System.out.println();
+        System.out.println("Список всех сотрудников с зарплатой меньше " + salaryLess);
+        for (int i = 0; i < employees.length; i++) {
+            if(employees[i].getSalary() < salaryLess) {
+                System.out.println("Id сотрудника: " + employees[i].getId() + " Имя сотрудника: " + employees[i].getName() + " Зарплата сотрудника: " + employees[i].getSalary());
+            }
+        }
+    }
+    private static void printNameSalaryMoreOrEqual(int salaryMoreOrEqual) {
+        System.out.println();
+        System.out.println("Список всех сотрудников с зарплатой больше (или равно) " + salaryMoreOrEqual);
+        for (int i = 0; i < employees.length; i++) {
+            if(employees[i].getSalary() >= salaryMoreOrEqual) {
+                System.out.println("Id сотрудника: " + employees[i].getId() + " Имя сотрудника: " + employees[i].getName() + " Зарплата сотрудника: " + employees[i].getSalary());
+            }
+        }
+    }
     public static void main(String[] args) {
         printAll();
         monthSalary();
@@ -79,5 +185,15 @@ public class Main {
         maxSalary();
         averageSalary();
         printAllNames();
+        printAll();
+        salaryIndexationAll(10);
+        minDepartmentSalary(5);
+        maxDepartmentSalary(4);
+        monthDepartmentSalary(3);
+        averageDepartmentSalary(2);
+        salaryIndexationDepartment(1,12);
+        printAllWithoutDepartment(1);
+        printNameSalaryLess(300_000);
+        printNameSalaryMoreOrEqual(440_000);
     }
 }
